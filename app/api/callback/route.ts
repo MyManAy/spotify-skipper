@@ -2,6 +2,32 @@ import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const fetchCurrentlyPlaying = async (t : string) => {
+    const url = "https://api.spotify.com/v1/me/player/currently-playing";
+  
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${t}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log(data); // Log the currently playing track info
+      return data;
+    } catch (error) {
+      console.error("Error fetching currently playing track:", error);
+      throw error;
+    }
+  };
+
+
+
   const code = req.nextUrl.searchParams.get("code");
   const state = req.nextUrl.searchParams.get("state");
 
@@ -38,6 +64,15 @@ export async function GET(req: NextRequest) {
     const data = await response.json();
 
     console.log((data as any).refresh_token);
+
+    fetchCurrentlyPlaying((data as any).access_token)
+    .then((data) => {
+      // return Response.json({ data });
+      console.log("Currently playing:", data.item.name);
+    })
+    .catch((error) => {
+      console.error("Failed to fetch:", error);
+    });
 
     return Response.json({ data });
     1;

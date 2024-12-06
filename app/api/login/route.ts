@@ -15,7 +15,7 @@ const generateRandom16Chars = () => {
 
 export async function GET() {
   const state = generateRandom16Chars();
-  const scope = "user-read-private user-read-email";
+  const scope = "user-read-private user-read-email user-read-playback-state";
   const BASE_URL =
     process.env.NODE_ENV === "production"
       ? "https://spotify-skipper.vercel.app"
