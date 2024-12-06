@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 const generateRandom16Chars = () => {
   const characters =
@@ -31,5 +32,7 @@ export async function GET() {
     show_dialog: "true",
   });
 
-  redirect("https://accounts.spotify.com/authorize?" + params.toString());
+  return NextResponse.redirect(
+    "https://accounts.spotify.com/authorize?" + params.toString()
+  );
 }
